@@ -9,13 +9,13 @@ Plagiarism in the recent years have become more rampant than ever, this is mainl
 In an effort to reduce the workload of the lecturers at Sunway University, I have decided to develop a program code plagiarism detection system that is capable of detecting likely cases of plagiarism. The system only detects the similarity of program codes, lecturers will determine if it is indeed plaigiarised upon further checking.   
 
 ## Algorithm
-> Tokenization
+### Tokenization
 The program codes are converted into tokens using Pygments.
 
-> Data Cleaning
+### Data Cleaning
 Based on the token types in Pygments, whitespaces and comments are filtered out.
 
-> Comparison
+### Comparison
 - K-gram
 The tokens are represented by k-grams.
 
