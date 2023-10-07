@@ -10,8 +10,8 @@ In an effort to reduce the workload of the lecturers at Sunway University, I hav
 
 ## Tech Stack
 - Python
- - Pygments
- - Numpy
+  - Pygments
+  - Numpy
 - Express JS (wip)
 - React JS (wip)
 - Node JS (wip)
