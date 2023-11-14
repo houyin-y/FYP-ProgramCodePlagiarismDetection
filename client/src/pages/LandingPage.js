@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom'
 import historyImage from "../img/icons8-browser-history-100.png"
 import settingsImage from "../img/icons8-settings-100.png"
 
-//import { useHistory } from 'react-router-dom'
-
 
 // import DragNdrop from "./DragNDrop.jsx"
 
