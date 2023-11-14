@@ -3,6 +3,7 @@ const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs')
 const path = require('path')
+const AdmZip = require('adm-zip')
 
 // create Express application
 const app = express();
@@ -36,6 +37,13 @@ app.post('/upload', upload.array('files'), (req, res) => {
 	if (!req.files || req.files.length === 0) {
 		return res.status(400).json({ success: false, error: 'No file uploaded' })
 	}
+
+	// check content of the .zip file
+	const zip = new AdmZip(req.files.buffer)
+	const zipEntries = zip.getEntries()
+
+	// check for .py file format within .zip file
+	
 
 	res.json({ success: true })
 
