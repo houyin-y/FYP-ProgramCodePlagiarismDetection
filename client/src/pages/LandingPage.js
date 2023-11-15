@@ -10,42 +10,47 @@ import settingsImage from "../img/icons8-settings-100.png"
 
 
 function LandingPage() {
-    //const history = useHistory()
-
     // useState hook for receiving input files
-    const [selectedFiles, setSelectedFiles] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleFileChange = (e) => {
-        const files = e.target.files;
-        setSelectedFiles(files);
+        const file = e.target.files[0];
+        setSelectedFile(file);
     }
 
     const handleFileSubmit = async (e) => {
         e.preventDefault()
 
-        const formData = new FormData()
-
-        // append every file to formData
-        for (let i = 0; i < selectedFiles.length; i++) {
-            formData.append('files', selectedFiles[i]);
+        // checks if the submitted file is a file
+        if (!selectedFile) {
+            alert('Please select a file')
+            return
         }
+
+        // 
+        const formData = new FormData()
+        formData.append('file', selectedFile)
 
         try {
             alert('submitted')
-            console.log(formData.getAll('files'));
 
             await axios.post('http://localhost:8000/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            // masuk new page
-            console.log('File(s) upload success! Moving to new page...')
-            //history.push('/progress')
+            console.log('File upload success! Moving to new page...')
 
         } catch (e) {
-            console.error('Error:', e);
-            console.log('Error response:', e.response.data);
+            console.error('Error:', e)
+
+            // checks if the ERROR MESSAGE from the server matches
+            if (e.response && e.response.data && e.response.data.error === 'Hey.... that\'s not python!') {
+                alert("Hey.... that's not a python!\nPlease attach ONLY python file in your .zip file.")
+            } else {
+                // Handle other errors here
+                alert('An error occurred during file upload.')
+            }
         }
     }
 
@@ -81,7 +86,7 @@ function LandingPage() {
 
             <div style={{ marginTop: "200px" }}>
                 <form action="/upload" method="post" encType="multipart/form-data" onSubmit={handleFileSubmit}>
-                    <input type="file" name="files" accept=".zip" onChange={handleFileChange} multiple />
+                    <input type="file" name="files" accept=".zip" onChange={handleFileChange} />
                     <input type="submit" value="Upload file" />
                 </form>
             </div>

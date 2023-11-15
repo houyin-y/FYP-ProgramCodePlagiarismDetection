@@ -31,19 +31,29 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 // handle file upload
-app.post('/upload', upload.array('files'), (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
 
 	// checks if file is uploaded 
-	if (!req.files || req.files.length === 0) {
+	if (!req.file) {
 		return res.status(400).json({ success: false, error: 'No file uploaded' })
-	}
+	} 
 
-	// check content of the .zip file
-	const zip = new AdmZip(req.files.buffer)
-	const zipEntries = zip.getEntries()
-
-	// check for .py file format within .zip file
 	
+	// check content of the .zip file
+	const zipFilePath = req.file.path
+	const zip = new AdmZip(zipFilePath)
+
+	// check each file for .py extension
+	zip.getEntries().forEach((entry) => {
+		const fileExtension = entry.entryName.split('.').pop()
+
+		if (fileExtension !== 'py') {
+			return res.status(400).json({ success: false, error: 'Hey.... that\'s not python!' })
+		} else {
+			console.log('Python found! AAAAAA')
+		}
+	})
+
 
 	res.json({ success: true })
 
