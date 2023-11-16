@@ -55,17 +55,19 @@ app.post('/upload', upload.single('file'), (req, res) => {
 		if (fileExtension !== 'py') {
 			return res.status(400).json({ success: false, error: 'Hey.... that\'s not python!' })
 		} else {
+			// hehe I'll keep this as an easter egg! :D
 			console.log('Python found! AAAAAA')
 		}
 	})
 	
 
 	// run Python script using a child process (spawn)
-	const zipFilePath = './server/uploads/' + zipFileName
-	const algoPath = '../algorithm/connect.py'
+	const zipFilePath = './uploads/' + zipFileName
+	const algoPath = '../algorithm/main.py'
 
 	const pythonProcess = spawn('python', [algoPath, zipFilePath]);
 
+	
 	// collect the output of the script into a variable (dataToSend)
 	pythonProcess.stdout.on('data', (data) => {
 		console.log(`Python script output: ${data}`);
