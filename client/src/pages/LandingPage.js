@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom'
 import historyImage from "../img/icons8-browser-history-100.png"
 import settingsImage from "../img/icons8-settings-100.png"
 
-
 // import DragNdrop from "./DragNDrop.jsx"
-
 
 
 function LandingPage() {
@@ -27,7 +25,7 @@ function LandingPage() {
             return
         }
 
-        // 
+        // adds file to formData
         const formData = new FormData()
         formData.append('file', selectedFile)
 
@@ -45,11 +43,11 @@ function LandingPage() {
             console.error('Error:', e)
 
             // checks if the ERROR MESSAGE from the server matches
-            if (e.response && e.response.data && e.response.data.error === 'Hey.... that\'s not python!') {
-                alert("Hey.... that's not a python!\nPlease attach ONLY python file in your .zip file.")
+            if (e.response && e.response.data && e.response.data.error === 'Hey.... that\'s not python!') {     // submitted non-python file in the .zip file 
+                alert("Hey.... that's not a python!\nPlease attach ONLY python files in your .zip file.")
             } else {
-                // Handle other errors here
                 alert('An error occurred during file upload.')
+                //console.log('Error data: ', e.response.data)
             }
         }
     }

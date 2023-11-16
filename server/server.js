@@ -4,14 +4,19 @@ const multer = require('multer');
 const fs = require('fs')
 const path = require('path')
 const AdmZip = require('adm-zip')
+const { spawn } = require('child_process')
+
 
 // create Express application
 const app = express();
 
+// immplement cors and json on the app
 app.use(cors());
 app.use(express.json());
 
 // multer configurations
+let zipFileName = ''
+
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		const uploadDir = path.join(__dirname, 'uploads');
@@ -24,7 +29,9 @@ const storage = multer.diskStorage({
 		cb(null, uploadDir);
 	},
 	filename: (req, file, cb) => {
-		cb(null, Date.now() + '-' + file.originalname); // Rename to avoid duplicates
+		zipFileName = Date.now() + '-' + file.originalname			// Rename to avoid duplicates
+
+		cb(null, zipFileName); 	
 	},
 });
 
@@ -38,10 +45,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
 		return res.status(400).json({ success: false, error: 'No file uploaded' })
 	} 
 
-	
 	// check content of the .zip file
-	const zipFilePath = req.file.path
-	const zip = new AdmZip(zipFilePath)
+	const zip = new AdmZip(req.file.path)
 
 	// check each file for .py extension
 	zip.getEntries().forEach((entry) => {
@@ -53,28 +58,36 @@ app.post('/upload', upload.single('file'), (req, res) => {
 			console.log('Python found! AAAAAA')
 		}
 	})
+	
 
+	// run Python script using a child process (spawn)
+	const zipFilePath = './server/uploads/' + zipFileName
+	const algoPath = '../algorithm/connect.py'
 
-	res.json({ success: true })
+	const pythonProcess = spawn('python', [algoPath, zipFilePath]);
 
-	/*
-	// Run Python script using a child process
-	const pythonProcess = spawn('python', ['path/to/your/script.py', arg1, arg2]);
-
+	// collect the output of the script into a variable (dataToSend)
 	pythonProcess.stdout.on('data', (data) => {
 		console.log(`Python script output: ${data}`);
+		dataToSend = data.toString()
 	});
 
+	// error handling
 	pythonProcess.stderr.on('data', (data) => {
 		console.error(`Python script error: ${data}`);
 	});
 
+	// close the python process
 	pythonProcess.on('close', (code) => {
 		console.log(`Python script exited with code ${code}`);
+		
 		// Respond to the client, indicating success or failure
 		res.json({ success: true });
+		//res.send(dataToSend)
+
+		// can either res.json or res.send only; error given is Cannot set headers after they are sent to the client
 	});
-	*/
+	
 })
 
 
