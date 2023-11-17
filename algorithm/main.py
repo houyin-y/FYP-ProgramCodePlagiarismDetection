@@ -7,9 +7,9 @@ upload codes
 
 import sys
 # import algorithm
-import connect
+from generateCorpus import *
 
 
-corpus = connect.generateCorpus(sys.argv[1])
+corpus = generateCorpus(sys.argv[1])
 
 print(corpus)
