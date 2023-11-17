@@ -69,6 +69,11 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 	
 	// collect the output of the script into a variable (dataToSend)
+	/*
+		THIS PART, NEED TO ACCEPT MORE OUTPUT
+		AS OF NOW I THINK IT ONLY ACCEPTS ONE LINE OF OUTPUT
+		
+	*/
 	pythonProcess.stdout.on('data', (data) => {
 		console.log(`Python script output: ${data}`);
 		dataToSend = data.toString()

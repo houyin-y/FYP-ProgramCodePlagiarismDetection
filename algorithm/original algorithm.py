@@ -50,7 +50,7 @@ def create_ftable(list):
     return frequency_table
 
 # calculate the idf of the pair documents
-def calc_idf(total_num_of_codes, kgram1, kgram2):
+def calc_idf(corpus, kgram1, kgram2):
     """
     https://blog.devgenius.io/tfidf-calculation-from-scratch-applying-on-real-world-data-set-8e918ff876f0
     https://blog.devgenius.io/tfidf-calculation-using-sklearns-tfidfvectorizer-24476f03c594
@@ -80,6 +80,7 @@ def calc_idf(total_num_of_codes, kgram1, kgram2):
     
     # idf = {kgram_term: idf value}
     idf = {}
+    total_num_of_codes = len(corpus)
     
     for kgram_term in frequency_of_kgram_term:
         placeholder = (np.log((total_num_of_codes)/(frequency_of_kgram_term[kgram_term])))
@@ -153,3 +154,90 @@ def tfidf(corpus):
     
     return feature_names, tfidf_values
 """
+
+
+
+
+
+### start here ###
+'''
+flow of the entire process
+upload codes 
+-> all the codes will be added into the corpus 
+-> codes will be compared in pairs (need to create a function to perform this)
+'''
+
+
+testing_code = """
+# ini comment bossku
+'''ubuntu'''
+if (y >     10):
+    print("x is more than 10")
+"""
+
+programcode1 = """
+def addition(num1, num2):
+    sum = num1 + num2
+    return sum
+"""
+
+programcode2 = """
+def add(x, y):
+    total = x + y
+    return total
+"""
+
+# all the uploaded codes will be inserted into the corpus
+corpus = [programcode1, programcode2, testing_code]
+
+
+
+### print for checking ###
+# token
+filtered_tokens = tokenize(testing_code)
+'''
+for token_type, value in filtered_tokens:
+    print(f"Token type: {token_type}, Keyword: {value}")
+
+print('')
+'''  
+
+# kgram
+kgrams = kgram(filtered_tokens, 2)
+'''
+for i in range(len(kgrams)):
+    print(kgrams[i])
+    
+print('')
+'''
+
+# frequency table
+ftable = create_ftable(kgrams)
+''''
+for record in ftable:
+    print(f'{record}: {ftable[record]}')
+    
+print('')
+'''
+
+# idf
+tokens1 = tokenize(programcode1)
+kgrams1 = kgram(tokens1, 2)
+ftable1 = create_ftable(kgrams1)
+
+tokens2 = tokenize(programcode2)
+kgrams2 = kgram(tokens2, 2)
+ftable2 = create_ftable(kgrams2)
+
+idf = calc_idf(corpus, kgrams1, kgrams2)
+
+for idf_values in idf:
+    print(f'{idf_values}: {idf[idf_values]}')
+    
+    
+# tf-idf
+tfidf1 = calc_tfidf(ftable1, idf)
+tfidf2 = calc_tfidf(ftable2, idf)
+
+cosine_similarity = cosine_similarity(tfidf1, tfidf2)
+print(f'\nSimilarity: {cosine_similarity}')
