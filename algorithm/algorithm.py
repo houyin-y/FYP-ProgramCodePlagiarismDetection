@@ -82,74 +82,58 @@ def calc_idf(total_num_of_codes, kgram1, kgram2):
     idf = {}
     
     for kgram_term in frequency_of_kgram_term:
-        placeholder = (np.log((total_num_of_codes)/(frequency_of_kgram_term[kgram_term])))
-        #placeholder = placeholder.astype(float)
-        
-        idf[kgram_term] = placeholder
+        idf[kgram_term] = (np.log((total_num_of_codes + 1) / (frequency_of_kgram_term[kgram_term] + 1))) + 1
 
     return idf
 
 # calculate normalised tf idf 
 def calc_tfidf(freq_table, idf):
-    # formula for normalised tf-idf: (frequency * idf)/sqrt(Σidf^2)
-    # Σidf^2 = sum of every idf within the document squared
+    # formula for tf-idf: (frequency * idf)
+    
+    # for tf normalization (kgram frequency / total sum of kgrams in document)
+    total_sum_of_kgrams = 0
+    
+    for kgram_term in freq_table:
+        total_sum_of_kgrams += freq_table[kgram_term]
     
     # normalised_tfidf = {kgram_term: normalised tfidf value}
-    normalised_tfidf = {}
-    sum_of_squared_idf = 0
-    
-    # square then sum every idf within the document
-    for kgram_term in idf:
-        sum_of_squared_idf += idf[kgram_term]
+    tfidf = {}
     
     # calculate normalised tfidf
     for kgram_term in freq_table:
-        tfidf = freq_table[kgram_term] * idf[kgram_term]
-        
-        normalised_tfidf[kgram_term] = (tfidf * np.sqrt(sum_of_squared_idf))
+        tfidf[kgram_term] = freq_table[kgram_term] * idf[kgram_term] / total_sum_of_kgrams
 
-    return normalised_tfidf
+    return tfidf
         
 # calculate the similarity of the pair documents using cosine similarity
-def cosine_similarity(doc1, doc2):
-    # transfer the tfidf values to a list for easy access
-    tfidf1 = []
-    tfidf2 = []
+def cosine_similarity(tfidf1, tfidf2):
+    grand_total = {}
     
-    for kgram_term in doc1:
-        tfidf1.append(doc1[kgram_term])
+    # obtain dot product (multiply the tfidf of code1 and code2 against the same kgram terms)
+    for kgram_term1 in tfidf1:
+        for kgram_term2 in tfidf2:
+            if (kgram_term1 == kgram_term2):
+                grand_total[kgram_term2] = tfidf1[kgram_term1] * tfidf2[kgram_term2]
     
-    for kgram_term in doc2:
-        tfidf2.append(doc2[kgram_term])
     
-    # ensure that both arrays are of the same length for dot product
-    min_length = min(len(tfidf1), len(tfidf2))
+    sum_of_dot_product = 0
     
-    if len(tfidf1) != min_length:
-        tfidf1 = tfidf1[0:min_length]
-    elif len(tfidf2) != min_length:
-        tfidf2 = tfidf2[0:min_length]
+    for kgram_term in grand_total:
+        sum_of_dot_product += grand_total[kgram_term]
+    
+    
+    sum_of_squared_tfidf1 = 0
+    sum_of_squared_tfidf2 = 0
+    
+    # sum of squared
+    for kgram_term in tfidf1:
+        sum_of_squared_tfidf1 += tfidf1[kgram_term]**2
+        
+    for kgram_term in tfidf2:
+        sum_of_squared_tfidf2 += tfidf2[kgram_term]**2
     
     # cosine similarity
     # formula: (dot product of doc1 and doc2) / (sqrt(sum of squared doc1) * sqrt(sum of squared doc2))
-    cosine = (np.dot(tfidf1, tfidf2) / norm(tfidf1) * norm(tfidf2))
+    cosine = sum_of_dot_product / (np.sqrt(sum_of_squared_tfidf1) * np.sqrt(sum_of_squared_tfidf2))
     
     return cosine
-
-"""
-def tfidf(corpus):
-    # initialize the tf-idf vectorizer
-    vectorizer = TfidfVectorizer()
-    
-    # vectorize the document
-    tfidf_matrix = vectorizer.fit_transform(corpus)
-    
-    # access vectorized values
-    feature_names = vectorizer.get_feature_names_out()
-    tfidf_values = tfidf_matrix.toarray()
-    
-    # final output
-    #df = pd.DataFrame(tfidf_values, columns=feature_names)
-    
-    return feature_names, tfidf_values
-"""
