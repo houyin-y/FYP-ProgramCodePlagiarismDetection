@@ -1,0 +1,5 @@
+/server/node_modules/
+/server/uploads/
+/client/node_modules/
+/algorithm/extracted_folder/
+/algorithm/__pycache__/

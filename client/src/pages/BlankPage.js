@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import historyImage from "../img/icons8-browser-history-100.png"
+import historyImage from "../img/history.png"
 
 
 function BlankPage() {

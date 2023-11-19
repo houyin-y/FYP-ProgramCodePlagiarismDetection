@@ -1,14 +1,13 @@
 import React, { useState } from "react"
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import historyImage from "../img/icons8-browser-history-100.png"
-import settingsImage from "../img/icons8-settings-100.png"
+//import { Link } from 'react-router-dom'
+import Settings from '../components/Dialog'
 
 // import DragNdrop from "./DragNDrop.jsx"
 
 
 function LandingPage() {
-    // useState hook for receiving input files
+    // submit file function
     const [selectedFile, setSelectedFile] = useState(null);
 
     const handleFileChange = (e) => {
@@ -52,25 +51,14 @@ function LandingPage() {
         }
     }
 
-    // CSS styles
-    const buttonStyle = {
-        backgroundColor: "rgba(255,255,255,0.5)",
-        border: "None",
-        marginRight: "25px"
-    }
-
     return (
         <div className="App" style={{ textAlign: "center" }}>
             <title>Web Application</title>
 
             <div align="right" style={{ marginTop: "30px", marginRight: "50px" }}>
-                <Link to="/blank" style={buttonStyle}>
-                    <img src={historyImage} alt="history icon" width="60" />
-                </Link>
+                <Settings imageType='history' />
 
-                <Link to="/" style={buttonStyle}>
-                    <img src={settingsImage} alt="settings icon" width="60" />
-                </Link>
+                <Settings imageType='settings' />
             </div>
 
             <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
