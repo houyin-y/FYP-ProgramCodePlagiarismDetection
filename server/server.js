@@ -70,7 +70,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 	
 	// collect the output of the script into a variable (dataToSend)
 	pythonProcess.stdout.on('data', (data) => {
-		console.log(`Python script output: ${data}`);
+		console.log(`\nPython script output: ... \n${data}`);
 		dataToSend = data.toString()
 	});
 

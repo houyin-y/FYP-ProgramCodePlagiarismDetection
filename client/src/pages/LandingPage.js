@@ -64,7 +64,7 @@ function LandingPage() {
             <title>Web Application</title>
 
             <div align="right" style={{ marginTop: "30px", marginRight: "50px" }}>
-                <Link to="/" style={buttonStyle}>
+                <Link to="/blank" style={buttonStyle}>
                     <img src={historyImage} alt="history icon" width="60" />
                 </Link>
 

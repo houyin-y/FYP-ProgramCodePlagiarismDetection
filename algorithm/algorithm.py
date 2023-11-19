@@ -88,9 +88,9 @@ def calc_idf(total_num_of_codes, kgram1, kgram2):
 
 # calculate normalised tf idf 
 def calc_tfidf(freq_table, idf):
-    # formula for tf-idf: (frequency * idf)
+    # formula for tf-idf: (normalized tf * idf)
     
-    # for tf normalization (kgram frequency / total sum of kgrams in document)
+    # for normalized tf (kgram frequency / total sum of kgrams in document)
     total_sum_of_kgrams = 0
     
     for kgram_term in freq_table:
