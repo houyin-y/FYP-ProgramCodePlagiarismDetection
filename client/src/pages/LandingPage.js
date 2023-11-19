@@ -1,12 +1,14 @@
 import React, { useState } from "react"
 import axios from 'axios'
-//import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Settings from '../components/Dialog'
 
 // import DragNdrop from "./DragNDrop.jsx"
 
 
 function LandingPage() {
+    const navigate = useNavigate()
+
     // submit file function
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -31,18 +33,28 @@ function LandingPage() {
         try {
             alert('submitted')
 
-            await axios.post('http://localhost:8000/upload', formData, {
+            const response = await axios.post('http://localhost:8000/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            console.log('File upload success! Moving to new page...')
+
+            if (response.data.success) {
+                // redirect if python succeed 
+                console.log('File upload success! Moving to new page...')
+                navigate('/blank')
+            } else {
+                // if python fail, do I want to redirect to an error page? or alert box?
+                console.error('Python script failed. Redirecting to error page...')
+            }
 
         } catch (e) {
             console.error('Error:', e)
 
             // checks if the ERROR MESSAGE from the server matches
-            if (e.response && e.response.data && e.response.data.error === 'Hey.... that\'s not python!') {     // submitted non-python file in the .zip file 
+            if (e.response && 
+                    e.response.data && 
+                    e.response.data.error === 'Hey.... that\'s not python!') {     // submitted non-python file in the .zip file 
                 alert("Hey.... that's not a python!\nPlease attach ONLY python files in your .zip file.")
             } else {
                 alert('An error occurred during file upload.')
@@ -64,7 +76,8 @@ function LandingPage() {
             <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
             <p style={{ fontSize: "28px" }}>Submit your files to begin plagiarism detection.</p>
 
-            {/** 
+            {/* dis was drag-drop :D
+             
             <div className='section'>
                 <DragNdrop onFilesSelected={setFiles} width="300px" height='200px'/>
             </div>
