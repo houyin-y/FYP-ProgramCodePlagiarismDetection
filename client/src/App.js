@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import BlankPage from './pages/BlankPage'
 import Processing from './pages/Processing'
+import Results from './pages/Results'
 import NotFound from './pages/NotFound'
 
 // import DragNdrop from "./DragNDrop.jsx"
@@ -15,6 +16,7 @@ function App() {
         <Route index element={<LandingPage />} />
         <Route path="/blank" element={<BlankPage />} />
         <Route path="/processing" element={<Processing />} />
+        <Route path="/results" element={<Results />} />
         <Route path="*" element={<NotFound />} />     {/* default routing */}
       </Routes>
     </BrowserRouter>

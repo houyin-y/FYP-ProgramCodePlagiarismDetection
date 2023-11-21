@@ -8,6 +8,7 @@ import Settings from '../components/Dialog'
 
 function LandingPage() {
     const navigate = useNavigate()
+    //const [pythonOutput, setPythonOutput] = useState(null)
 
     // submit file function
     const [selectedFile, setSelectedFile] = useState(null);
@@ -41,11 +42,14 @@ function LandingPage() {
 
             if (response.data.success) {
                 // redirect if python succeed 
-                console.log('File upload success! Moving to new page...')
-                navigate('/blank')
+                const pythonOutput = response.data.output
+                
+                console.log('File upload success! Moving to the next page...')
+                navigate('/results', { state:{pythonOutput} })
             } else {
                 // if python fail, do I want to redirect to an error page? or alert box?
                 console.error('Python script failed. Redirecting to error page...')
+                navigate('/')
             }
 
         } catch (e) {

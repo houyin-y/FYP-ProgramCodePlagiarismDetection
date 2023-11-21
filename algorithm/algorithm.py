@@ -135,5 +135,6 @@ def cosine_similarity(tfidf1, tfidf2):
     # cosine similarity
     # formula: (dot product of doc1 and doc2) / (sqrt(sum of squared doc1) * sqrt(sum of squared doc2))
     cosine = sum_of_dot_product / (np.sqrt(sum_of_squared_tfidf1) * np.sqrt(sum_of_squared_tfidf2))
+    cosine = "{:.2f}%".format((cosine * 100))
     
     return cosine

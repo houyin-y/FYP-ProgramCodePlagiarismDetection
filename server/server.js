@@ -67,14 +67,12 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 	const pythonProcess = spawn('python', [algoPath, zipFilePath])
 
-	// collect the output of the script into a variable (dataToSend)
-	pythonProcess.stdout.on('data', (data) => {
-		console.log(`\nPython script output: ... \n${data}`)
-	});
+	// collect the output of the script into a variable 
+	let pythonOutput = ''
 
-	// error handling
-	pythonProcess.stderr.on('data', (data) => {
-		console.error(`Python script error: ${data}`)
+	pythonProcess.stdout.on('data', (data) => {
+		pythonOutput += data.toString()
+		console.log(`\nPython script output: ... \n${pythonOutput}`)
 	});
 
 	// close the python process
@@ -82,9 +80,9 @@ app.post('/upload', upload.single('file'), (req, res) => {
 		console.log(`Python script exited with code ${code}`)
 		
 		if (code === 0) {
-			res.json({ success: true })
+			res.json({ success: true, output: pythonOutput })
 		} else { 
-			res.json({ success: false })
+			res.json({ success: false, output: null })
 		}
 	});
 	
