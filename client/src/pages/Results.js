@@ -56,10 +56,6 @@ function Results() {
         percentages.push(percentage)
     })
 
-    console.log(filePairs)
-    console.log(percentages)
-
-
     const handleExpandClick = (cardId) => {
         setExpanded((prevExpanded) => ({
             ...prevExpanded,
