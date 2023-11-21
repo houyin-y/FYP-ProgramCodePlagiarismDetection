@@ -30,19 +30,17 @@ def generateCorpus(zipFilePath):
         zip_ref.extractall(extracted_folder_path)
 
     # store each file into an array (corpus)
-    count = 0
     file_names = os.listdir(extracted_folder_path)
-    corpus = []
+    corpusWithNames = {}
 
     for file_name in file_names:
         file_path = extracted_folder_path + '/' + file_name
-        count += 1
 
         # read each file into a variable
         with open (file_path, 'r', encoding='utf-8') as file:
-            corpus.append(file.read())
+            corpusWithNames[file_name] = file.read()
 
-    return corpus, count
+    return corpusWithNames
 
 # split all the codes within the corpus into non-repeating pairs (e.g., A B C -> AB, BC, CD)
 def createPairs(corpus):

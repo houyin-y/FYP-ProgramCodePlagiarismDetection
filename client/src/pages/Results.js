@@ -23,20 +23,14 @@ const ExpandMore = styled((props) => {
 const cardsData = [
     {
         id: 1,
-        title: 'Program A.py Program B.py',
-        title2: '93%',
         content: 'Content for Program A.py Program B.py',
     },
     {
         id: 2,
-        title: 'Program A.py Program C.py',
-        title2: '43%',
         content: 'Content for Program A.py Program C.py',
     },
     {
         id: 3,
-        title: 'Program B.py Program C.py',
-        title2: '10%',
         content: 'Content for Program B.py Program C.py',
     },
 ]
@@ -45,10 +39,26 @@ function Results() {
     const [expanded, setExpanded] = useState({})
     const location = useLocation()
 
+    // split the output into an array
     const pythonOutput = location.state
+    const pythonOutputArray = pythonOutput.pythonOutput.trim().split('\r\n')
 
-    const regex = /Similarity: (\d+\.\d+)%/g;
-    const matches = pythonOutput.pythonOutput.match(regex);
+    const filePairs = []
+    const percentages = []
+
+    pythonOutputArray.forEach(output => {
+        const parts = output.split(':')
+
+        const filePair = parts[0].trim()
+        const percentage = parts[1].trim()
+
+        filePairs.push(filePair)
+        percentages.push(percentage)
+    })
+
+    console.log(filePairs)
+    console.log(percentages)
+
 
     const handleExpandClick = (cardId) => {
         setExpanded((prevExpanded) => ({
@@ -66,8 +76,8 @@ function Results() {
                     <div key={card.id} style={{ margin: 'auto', marginBottom: '20px', width: '650px' }}>
                         <Card>
                             <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Typography>{card.title}</Typography>
-                                <Typography sx={{ marginLeft: "auto" }}>{matches[card.id - 1]}</Typography>
+                                <Typography>{filePairs[card.id - 1]}</Typography>
+                                <Typography sx={{ marginLeft: "auto" }}>{percentages[card.id - 1]}</Typography>
                                 <ExpandMore
                                     expand={expanded[card.id]}
                                     onClick={() => handleExpandClick(card.id)}
