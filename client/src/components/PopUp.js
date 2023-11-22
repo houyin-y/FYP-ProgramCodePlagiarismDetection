@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 import settingsImage from "../img/settings.png"
 import historyImage from "../img/history.png"
 import InputSlider from "./InputSlider"
-import FileUpload from "./FileUpload"
+import CodeExclusionUpload from "./CodeExclusionUpload"
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -61,7 +61,7 @@ function PopUp({ imageType }) {
             <b>Code exclusion</b><br />
             Upload code(s) to be exempted from plagiarism.<br /><br /> 
             
-            <FileUpload />
+            <CodeExclusionUpload />
           </Typography>
         </DialogContent>
       )

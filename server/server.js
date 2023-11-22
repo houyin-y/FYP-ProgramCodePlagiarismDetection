@@ -14,6 +14,26 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+// Function to delete all files in a directory
+const deleteFilesInDirectory = (directory) => {
+	fs.readdirSync(directory).forEach((file) => {
+		const filePath = path.join(directory, file);
+
+		// Check if it is a file (not a directory)
+		if (fs.statSync(filePath).isFile()) {
+			// Delete the file
+			fs.unlinkSync(filePath);
+			console.log(`Deleted: ${filePath}`);
+		}
+	});
+};
+
+// Function to check if the directory contains any files
+const directoryHasFiles = (directory) => {
+	const files = fs.readdirSync(directory);
+	return files.length > 0;
+};
+
 // multer configurations
 let zipFileName = ''
 
@@ -26,6 +46,12 @@ const storage = multer.diskStorage({
 			fs.mkdirSync(uploadDir)
 		}
 
+		// Check if the directory has any files before attempting to delete
+		if (directoryHasFiles(uploadDir)) {
+			deleteFilesInDirectory(uploadDir);
+		}
+
+
 		cb(null, uploadDir);
 	},
 	filename: (req, file, cb) => {
@@ -37,13 +63,39 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+const storageExcl = multer.diskStorage({
+	destination: (req, file, cb) => {
+		const uploadDir = path.join(__dirname, 'uploads/code-exclusion/')
+		deleteFilesInDirectory(uploadDir)
+
+		// ensure 'uploads' directory exists
+		if (!fs.existsSync(uploadDir)) {
+			fs.mkdirSync(uploadDir)
+		}
+
+		// Check if the directory has any files before attempting to delete
+		if (directoryHasFiles(uploadDir)) {
+			deleteFilesInDirectory(uploadDir);
+		}
+
+		cb(null, uploadDir);
+	},
+	filename: (req, file, cb) => {
+		zipFileName = Date.now() + '-' + file.originalname			// Rename to avoid duplicates
+
+		cb(null, zipFileName)
+	},
+});
+
+const uploadExcl = multer({ storage: storageExcl })
+
 // handle file upload
 app.post('/upload', upload.single('file'), (req, res) => {
 
 	// checks if file is uploaded 
 	if (!req.file) {
 		return res.status(400).json({ success: false, error: 'No file uploaded' })
-	} 
+	}
 
 	// check content of the .zip file
 	const zip = new AdmZip(req.file.path)
@@ -59,7 +111,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 			console.log('Python found! AAAAAA')
 		}
 	})
-	
+
 
 	// run Python script using a child process (spawn)
 	const zipFilePath = './uploads/' + zipFileName
@@ -78,16 +130,41 @@ app.post('/upload', upload.single('file'), (req, res) => {
 	// close the python process
 	pythonProcess.on('close', (code) => {
 		console.log(`Python script exited with code ${code}`)
-		
+
 		if (code === 0) {
 			res.json({ success: true, output: pythonOutput })
-		} else { 
+		} else {
 			res.json({ success: false, output: null })
 		}
 	});
-	
+
 })
 
+app.post('/uploadExcl', uploadExcl.single('file'), (req, res) => {
+
+	// checks if file is uploaded 
+	if (!req.file) {
+		return res.status(400).json({ success: false, error: 'No file uploaded' })
+	}
+
+	// check content of the .zip file
+	const zip = new AdmZip(req.file.path)
+
+	// check each file for .py extension
+	zip.getEntries().forEach((entry) => {
+		const fileExtension = entry.entryName.split('.').pop()
+
+		if (fileExtension !== 'py') {
+			return res.status(400).json({ success: false, error: 'Hey.... that\'s not python!' })
+		} else {
+			// hehe I'll keep this as an easter egg! :D
+			console.log('Python found! AAAAAA')
+		}
+	})
+
+	//...
+	res.json({ success: true })
+})
 
 app.listen(8000, () => {
 	console.log('Server is running on port 8000 at http://localhost:8000');
