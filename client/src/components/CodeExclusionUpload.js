@@ -32,7 +32,7 @@ function CodeExclusionUpload() {
                 },
             })
 
-            if (response.success) {
+            if (response.status) {
                 alert('Success! Please proceed.')
             }
 

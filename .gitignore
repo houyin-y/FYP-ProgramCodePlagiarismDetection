@@ -2,4 +2,5 @@
 /server/uploads/
 /client/node_modules/
 /algorithm/extracted_folder/
+/algorithm/extracted_folder/code_exclusion/
 /algorithm/__pycache__/
