@@ -24,16 +24,16 @@ function CodeExclusionUpload() {
         formData.append('file', selectedFile)
 
         try {
-            alert('submitted')
-
             const response = await axios.post('http://localhost:8000/uploadExcl', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
 
-            if (response.status) {
+            if (response.data.success) {
                 alert('Success! Please proceed.')
+            } else {
+                alert('Something went wrong! Please upload try again.')
             }
 
         } catch (e) {

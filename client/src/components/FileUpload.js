@@ -41,9 +41,8 @@ function FileSubmission() {
                 console.log('File upload success! Moving to the next page...')
                 navigate('/results', { state: { pythonOutput } })
             } else {
-                // if python fail, do I want to redirect to an error page? or alert box?
-                console.error('Python script failed. Redirecting to error page...')
-                navigate('/')
+                console.error('Python script failed.')
+                alert('Python script failed. Please check the submitted files and try again.')
             }
 
         } catch (e) {

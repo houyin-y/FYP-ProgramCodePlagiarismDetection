@@ -36,32 +36,45 @@ const cardsData = [
 ]
 
 function Results() {
+    let handleExpandClick
     const [expanded, setExpanded] = useState({})
     const location = useLocation()
-
-    // split the output into an array
-    const pythonOutput = location.state
-    const pythonOutputArray = pythonOutput.pythonOutput.trim().split('\r\n')
 
     const filePairs = []
     const percentages = []
 
-    pythonOutputArray.forEach(output => {
-        const parts = output.split(':')
+    try {
+        // split the output into an array
+        const pythonOutput = location.state
+        const pythonOutputArray = pythonOutput.pythonOutput.trim().split('\r\n')
 
-        const filePair = parts[0].trim()
-        const percentage = parts[1].trim()
+        if (pythonOutputArray.length >= 2) {
+            pythonOutputArray.forEach(output => {
+                const parts = output.split(':')
+    
+                    const filePair = parts[0].trim()
+                    const percentage = parts[1].trim()
+    
+                    filePairs.push(filePair)
+                    percentages.push(percentage)
+            })
+        } else {
+            console.error('Error: Type error! Please include more than ONE(1) .py file in your .zip file.')
+            alert("Please include more than ONE(1) .py file in your .zip file.")
+        }
+        
+        handleExpandClick = (cardId) => {
+            setExpanded((prevExpanded) => ({
+                ...prevExpanded,
+                [cardId]: !prevExpanded[cardId],
+            }));
+        };
 
-        filePairs.push(filePair)
-        percentages.push(percentage)
-    })
+    } catch (e) {
+        console.error('Error:', e)
+            alert('An error occurred during file upload.')
+    }
 
-    const handleExpandClick = (cardId) => {
-        setExpanded((prevExpanded) => ({
-            ...prevExpanded,
-            [cardId]: !prevExpanded[cardId],
-        }));
-    };
 
     return (
         <div className="App" style={{ textAlign: "center" }}>
