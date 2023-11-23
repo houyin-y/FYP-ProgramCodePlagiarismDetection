@@ -23,7 +23,6 @@ const deleteFilesInDirectory = (directory) => {
 		if (fs.statSync(filePath).isFile()) {
 			// Delete the file
 			fs.unlinkSync(filePath)
-			console.log(`Deleted: ${filePath}`)
 		}
 	});
 };
@@ -129,7 +128,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 const storageExcl = multer.diskStorage({
 	destination: (req, file, cb) => {
-		const uploadDir = path.join(__dirname, 'uploads/code-exclusion/')
+		const uploadDir = path.join(__dirname, 'uploads/code_exclusion/')
 
 		// ensure 'uploads' directory exists
 		if (!fs.existsSync(uploadDir)) {
@@ -177,8 +176,30 @@ app.post('/uploadExcl', uploadExcl.single('file'), (req, res) => {
 		}
 	})
 
-	//...
-	res.json({ success: true })
+	// run Python script using a child process (spawn)
+	const zipFilePath = './uploads/code_exclusion/' + zipFileName
+	const algoPath = '../algorithm/codeExclusion.py'
+
+	const pythonProcess = spawn('python', [algoPath, zipFilePath])
+
+	pythonProcess.stderr.on('data', (data) => {
+		console.error(`stderr: ${data}`);
+	  });
+	  
+	  pythonProcess.on('error', (err) => {
+		console.error(`Failed to start subprocess: ${err}`);
+	  });
+
+	// close the python process
+	pythonProcess.on('close', (code) => {
+		console.log(`Python script exited with code ${code}`)
+
+		if (code === 0) {
+			res.json({ success: true })
+		} else {
+			res.json({ success: false })
+		}
+	});	
 })
 
 
