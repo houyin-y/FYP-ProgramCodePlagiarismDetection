@@ -59,8 +59,8 @@ function PopUp({ imageType }) {
             <InputSlider />
             <br />
             <b>Code exclusion</b><br />
-            Upload code(s) to be exempted from plagiarism.<br /><br /> 
-            
+            Upload code(s) to be exempted from plagiarism.<br /><br />
+
             <CodeExclusionUpload />
           </Typography>
         </DialogContent>

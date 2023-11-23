@@ -17,13 +17,13 @@ app.use(express.json())
 // Function to delete all files in a directory
 const deleteFilesInDirectory = (directory) => {
 	fs.readdirSync(directory).forEach((file) => {
-		const filePath = path.join(directory, file);
+		const filePath = path.join(directory, file)
 
 		// Check if it is a file (not a directory)
 		if (fs.statSync(filePath).isFile()) {
 			// Delete the file
-			fs.unlinkSync(filePath);
-			console.log(`Deleted: ${filePath}`);
+			fs.unlinkSync(filePath)
+			console.log(`Deleted: ${filePath}`)
 		}
 	});
 };
@@ -34,7 +34,8 @@ const directoryHasFiles = (directory) => {
 	return files.length > 0;
 };
 
-// multer configurations
+
+// multer config for .py files
 let zipFileName = ''
 
 const storage = multer.diskStorage({
@@ -63,33 +64,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-const storageExcl = multer.diskStorage({
-	destination: (req, file, cb) => {
-		const uploadDir = path.join(__dirname, 'uploads/code-exclusion/')
-		deleteFilesInDirectory(uploadDir)
 
-		// ensure 'uploads' directory exists
-		if (!fs.existsSync(uploadDir)) {
-			fs.mkdirSync(uploadDir)
-		}
-
-		// Check if the directory has any files before attempting to delete
-		if (directoryHasFiles(uploadDir)) {
-			deleteFilesInDirectory(uploadDir);
-		}
-
-		cb(null, uploadDir);
-	},
-	filename: (req, file, cb) => {
-		zipFileName = Date.now() + '-' + file.originalname			// Rename to avoid duplicates
-
-		cb(null, zipFileName)
-	},
-});
-
-const uploadExcl = multer({ storage: storageExcl })
-
-// handle file upload
+// handle file upload for .py files
 app.post('/upload', upload.single('file'), (req, res) => {
 
 	// checks if file is uploaded 
@@ -127,6 +103,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
 		console.log(`\nPython script output: ... \n${pythonOutput}`)
 	});
 
+	pythonProcess.stderr.on('data', (data) => {
+		console.error(`stderr: ${data}`);
+	  });
+	  
+	  pythonProcess.on('error', (err) => {
+		console.error(`Failed to start subprocess: ${err}`);
+	  });
+
 	// close the python process
 	pythonProcess.on('close', (code) => {
 		console.log(`Python script exited with code ${code}`)
@@ -140,6 +124,37 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 })
 
+
+// multer config for code exclusion
+
+const storageExcl = multer.diskStorage({
+	destination: (req, file, cb) => {
+		const uploadDir = path.join(__dirname, 'uploads/code-exclusion/')
+
+		// ensure 'uploads' directory exists
+		if (!fs.existsSync(uploadDir)) {
+			fs.mkdirSync(uploadDir)
+		}
+
+		// Check if the directory has any files before attempting to delete
+		if (directoryHasFiles(uploadDir)) {
+			deleteFilesInDirectory(uploadDir);
+		}
+
+		cb(null, uploadDir);
+	},
+	filename: (req, file, cb) => {
+		zipFileName = Date.now() + '-' + file.originalname			// Rename to avoid duplicates
+
+		cb(null, zipFileName)
+	},
+});
+
+// handle file upload for code exclusion
+const uploadExcl = multer({ storage: storageExcl })
+
+
+// handle file submission for code exclusion
 app.post('/uploadExcl', uploadExcl.single('file'), (req, res) => {
 
 	// checks if file is uploaded 
@@ -165,6 +180,7 @@ app.post('/uploadExcl', uploadExcl.single('file'), (req, res) => {
 	//...
 	res.json({ success: true })
 })
+
 
 app.listen(8000, () => {
 	console.log('Server is running on port 8000 at http://localhost:8000');

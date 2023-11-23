@@ -15,7 +15,7 @@ def generateCorpus(zipFilePath):
 
     # define the file path of the .zip file and folder path where it will be extracted to
     zip_file_path = zipFilePath
-    extracted_folder_path = "../algorithm/extracted_folder"
+    extracted_folder_path = '../algorithm/extracted_folder'
 
     # remove all files in extracted_folder
     file_names = os.listdir(extracted_folder_path)
@@ -34,11 +34,13 @@ def generateCorpus(zipFilePath):
     corpusWithNames = {}
 
     for file_name in file_names:
-        file_path = extracted_folder_path + '/' + file_name
+        file_path = os.path.join(extracted_folder_path, file_name)
 
-        # read each file into a variable
-        with open (file_path, 'r', encoding='utf-8') as file:
-            corpusWithNames[file_name] = file.read()
+        if os.path.isfile(file_path) and file_name.endswith('.py'):
+
+            # read each file into a variable
+            with open (file_path, 'r', encoding='utf-8') as file:
+                corpusWithNames[file_name] = file.read()
 
     return corpusWithNames
 

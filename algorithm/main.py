@@ -12,7 +12,6 @@ import miscFunctions as miscF
 
 corpusWithNames = miscF.generateCorpus(sys.argv[1])
 
-
 '''
 -> (1) perform tokenization (+ data cleaning)
 -> (2) create kgrams
