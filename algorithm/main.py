@@ -8,6 +8,7 @@ upload codes
 import sys
 import algorithm as algo
 import miscFunctions as miscF
+import json
 
 
 corpusWithNames, cleanCorpusWithNames = miscF.generateCorpus(sys.argv[1], '../algorithm/extracted_folder')
@@ -54,5 +55,8 @@ for pair in pairs:
     tfidf1 = algo.calc_tfidf(all_ftables[pair[0]], idf)
     tfidf2 = algo.calc_tfidf(all_ftables[pair[1]], idf)
                              
-    cosine_similarity = algo.cosine_similarity(tfidf1, tfidf2)
+    cosine_similarity, _ = algo.cosine_similarity(tfidf1, tfidf2)
     print(f'{pair[0]} vs {pair[1]}: {cosine_similarity}')
+
+#json.dumps({"corpus": corpusWithNames})
+print(f'corpus: {corpusWithNames}')

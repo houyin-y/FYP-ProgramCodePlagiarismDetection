@@ -94,30 +94,40 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 	const pythonProcess = spawn('python', [algoPath, zipFilePath])
 
-	// collect the output of the script into a variable 
+	// collect the output (results and corpus) of the script into a variable 
 	let pythonOutput = ''
+	let corpus = ''
 
 	pythonProcess.stdout.on('data', (data) => {
-		pythonOutput += data.toString()
-		console.log(`\nPython script output: ... \n${pythonOutput}`)
+		// Split the lines of the output
+		const lines = data.toString().split('corpus: ')
+
+		// Combine the all the lines except for the last line into the pythonOutput variable
+		pythonOutput = lines[0]
+		
+		// Assign the last line to the corpus variable
+		corpus = lines[lines.length - 1]
+
+		console.log(`\nPython script output (pythonOutput): ... \n${pythonOutput}`)
+		console.log(`\nPython script output (corpus): ... \n${corpus}`)
 	});
 
 	pythonProcess.stderr.on('data', (data) => {
 		console.error(`stderr: ${data}`);
-	  });
-	  
-	  pythonProcess.on('error', (err) => {
+	});
+
+	pythonProcess.on('error', (err) => {
 		console.error(`Failed to start subprocess: ${err}`);
-	  });
+	});
 
 	// close the python process
 	pythonProcess.on('close', (code) => {
 		console.log(`Python script exited with code ${code}`)
 
 		if (code === 0) {
-			res.json({ success: true, output: pythonOutput })
+			res.json({ success: true, pythonOutput, corpus })
 		} else {
-			res.json({ success: false, output: null })
+			res.json({ success: false, pythonOutput: null, corpus: null })
 		}
 	});
 
@@ -184,11 +194,11 @@ app.post('/uploadExcl', uploadExcl.single('file'), (req, res) => {
 
 	pythonProcess.stderr.on('data', (data) => {
 		console.error(`stderr: ${data}`);
-	  });
-	  
-	  pythonProcess.on('error', (err) => {
+	});
+
+	pythonProcess.on('error', (err) => {
 		console.error(`Failed to start subprocess: ${err}`);
-	  });
+	});
 
 	// close the python process
 	pythonProcess.on('close', (code) => {
@@ -199,7 +209,7 @@ app.post('/uploadExcl', uploadExcl.single('file'), (req, res) => {
 		} else {
 			res.json({ success: false })
 		}
-	});	
+	});
 })
 
 

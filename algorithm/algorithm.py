@@ -108,11 +108,13 @@ def calc_tfidf(freq_table, idf):
 # calculate the similarity of the pair documents using cosine similarity
 def cosine_similarity(tfidf1, tfidf2):
     grand_total = {}
+    kgramHits = []
     
     # obtain dot product (multiply the tfidf of code1 and code2 against the same kgram terms)
     for kgram_term1 in tfidf1:
         for kgram_term2 in tfidf2:
             if (kgram_term1 == kgram_term2):
+                kgramHits.append(kgram_term1)
                 grand_total[kgram_term2] = tfidf1[kgram_term1] * tfidf2[kgram_term2]
     
     
@@ -137,4 +139,7 @@ def cosine_similarity(tfidf1, tfidf2):
     cosine = sum_of_dot_product / (np.sqrt(sum_of_squared_tfidf1) * np.sqrt(sum_of_squared_tfidf2))
     cosine = "{:.2f}%".format((cosine * 100))
     
-    return cosine
+    return cosine, kgramHits
+
+
+

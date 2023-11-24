@@ -36,10 +36,11 @@ function FileSubmission() {
 
             if (response.data.success) {
                 // redirect if python succeed 
-                const pythonOutput = response.data.output
+                const pythonOutput = response.data.pythonOutput
+                const corpus = response.data.corpus
 
                 console.log('File upload success! Moving to the next page...')
-                navigate('/results', { state: { pythonOutput } })
+                navigate('/results', { state: { pythonOutput, corpus } })
             } else {
                 console.error('Python script failed.')
                 alert('Python script failed. Please check the submitted files and try again.')

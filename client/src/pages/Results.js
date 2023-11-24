@@ -20,85 +20,78 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const cardsData = [
-    {
-        id: 1,
-        content: 'Content for Program A.py Program B.py',
-    },
-    {
-        id: 2,
-        content: 'Content for Program A.py Program C.py',
-    },
-    {
-        id: 3,
-        content: 'Content for Program B.py Program C.py',
-    },
-]
-
 function Results() {
-    let handleExpandClick
-    const [expanded, setExpanded] = useState({})
     const location = useLocation()
+    const [expanded, setExpanded] = useState({})
+
+    const handleExpandClick = (index) => {
+        setExpanded((prevExpanded) => ({
+            ...prevExpanded,
+            [index]: !prevExpanded[index],
+        }));
+    }
 
     const filePairs = []
     const percentages = []
 
+    let fileNames = []
+    let codes = []
+
     try {
-        // split the output into an array
-        const pythonOutput = location.state
-        const pythonOutputArray = pythonOutput.pythonOutput.trim().split('\r\n')
+        const { pythonOutput, corpus } = location.state
+        const pythonOutputArray = pythonOutput.trim().split('\r\n')
 
-        if (pythonOutputArray.length >= 2) {
-            pythonOutputArray.forEach(output => {
-                const parts = output.split(':')
-    
-                    const filePair = parts[0].trim()
-                    const percentage = parts[1].trim()
-    
-                    filePairs.push(filePair)
-                    percentages.push(percentage)
-            })
+        console.log(corpus)
+
+        // handle pythonOutput
+        pythonOutputArray.forEach(output => {
+            const parts = output.split(':')
+
+            const filePair = parts[0].trim()
+            const percentage = parts[1].trim()
+
+            filePairs.push(filePair)
+            percentages.push(percentage)
+        })
+
+        // handle corpus
+        fileNames = corpus.match(/'([^']+)':/g).map(match => match.slice(1, -2))
+        codes = corpus.match(/'([^']+)': '([^']+)'/g).map(match => match.split("': '")[1].replace(/\\'/g, "'"))
+
+
+
+
+    } catch (error) {
+        if (error instanceof TypeError && error.message.includes('parts[1] is undefined')) {
+            console.error('Specific error: parts[1] is undefined');
         } else {
-            console.error('Error: Type error! Please include more than ONE(1) .py file in your .zip file.')
-            alert("Please include more than ONE(1) .py file in your .zip file.")
+            console.error('An error occurred:', error.message);
         }
-        
-        handleExpandClick = (cardId) => {
-            setExpanded((prevExpanded) => ({
-                ...prevExpanded,
-                [cardId]: !prevExpanded[cardId],
-            }));
-        };
-
-    } catch (e) {
-        console.error('Error:', e)
-            alert('An error occurred during file upload.')
     }
-
 
     return (
         <div className="App" style={{ textAlign: "center" }}>
             <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
 
             <div style={{ textAlign: "center" }}>
-                {cardsData.map((card) => (
-                    <div key={card.id} style={{ margin: 'auto', marginBottom: '20px', width: '650px' }}>
+                {filePairs.map((filePair, index) => (
+                    <div key={index} style={{ margin: 'auto', marginBottom: '20px', width: '650px' }}>
                         <Card>
                             <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Typography>{filePairs[card.id - 1]}</Typography>
-                                <Typography sx={{ marginLeft: "auto" }}>{percentages[card.id - 1]}</Typography>
+                                <Typography>{filePair}</Typography>
+                                <Typography sx={{ marginLeft: "auto" }}>{percentages[index]}</Typography>
                                 <ExpandMore
-                                    expand={expanded[card.id]}
-                                    onClick={() => handleExpandClick(card.id)}
-                                    aria-expanded={expanded[card.id]}
+                                    expand={expanded[index]}
+                                    onClick={() => handleExpandClick(index)}
+                                    aria-expanded={expanded[index]}
                                     aria-label="show more"
                                 >
                                     <ExpandMoreIcon />
                                 </ExpandMore>
                             </CardContent>
-                            <Collapse in={expanded[card.id]} timeout="auto" unmountOnExit>
+                            <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                                 <CardContent>
-                                    <Typography paragraph>{card.content}</Typography>
+                                    <Typography paragraph>{codes[index]}</Typography>
                                 </CardContent>
                             </Collapse>
                         </Card>

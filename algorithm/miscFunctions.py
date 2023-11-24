@@ -59,10 +59,6 @@ def generateCorpus(zip_file_path, extracted_folder_path):
 
     if (len(os.listdir(extracted_code_exclusion_folder)) > 0):
         excludedCodes = getExcludedCodes()
-
-        ### !!! NOTEEEE each file submitted for code exclusion will be placed in different elements of the array excludedCodes
-        
-        ## I THINK NEED TO FOR LOOP EXCLUDED CODES FIRST BARU CORPUS WITH NAMES ##
         
         for excludedCode in excludedCodes:
         
