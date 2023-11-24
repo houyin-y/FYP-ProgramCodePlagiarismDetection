@@ -51,7 +51,7 @@ function PopUp({ imageType }) {
       dialogTitle = "Settings"
       dialogContent = (
         <DialogContent dividers>
-          <Typography gutterBottom style={{ margin: "10px" }}>
+          <Typography component="div" style={{ margin: "10px" }}>
             <b>Plagiarism Threshold</b><br />
             Similarity percentage below threshold will not be considered as plagiarism.
             <br />
@@ -144,7 +144,6 @@ function PopUp({ imageType }) {
 
       </BootstrapDialog>
     </React.Fragment>
-  )
-}
+  )}
 
 export default PopUp;
