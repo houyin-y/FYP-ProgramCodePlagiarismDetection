@@ -39,6 +39,10 @@ function FileSubmission({ value }) {
                 const pythonOutput = response.data.pythonOutput
                 const corpus = response.data.corpus
 
+                if (!pythonOutput || pythonOutput.trim() === '') {
+                    throw new Error('Please include more than ONE(1) .py file in your .zip file.')
+                }
+                
                 console.log('File upload success! Moving to the next page...')
                 navigate('/results', { state: { pythonOutput, corpus, value } })
             } else {
@@ -54,9 +58,10 @@ function FileSubmission({ value }) {
                 e.response.data &&
                 e.response.data.error === 'Hey.... that\'s not python!') {     // submitted non-python file in the .zip file 
                 alert("Hey.... that's not a python!\nPlease attach ONLY python files in your .zip file.")
+            } else if (e.message === 'Please include more than ONE(1) .py file in your .zip file.') {
+                alert('Please include more than ONE(1) .py file in your .zip file.')
             } else {
                 alert('An error occurred during file upload.')
-                //console.log('Error data: ', e.response.data)
             }
         }
     }

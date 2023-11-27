@@ -43,64 +43,53 @@ function Results() {
 
     const codePair1 = []
     const codePair2 = []
-    
 
-    try {
-        //
-        // handle pythonOutput
-        const pythonOutputArray = pythonOutput.trim().split('\r\n')
+    //
+    // handle pythonOutput
+    const pythonOutputArray = pythonOutput.trim().split('\r\n')
 
-        pythonOutputArray.forEach(output => {
-            const parts = output.split(':')
+    pythonOutputArray.forEach(output => {
+        const parts = output.split(':')
 
-            const filePair = parts[0].trim()
-            const percentage = parts[1].trim()
+        const filePair = parts[0].trim()
+        const percentage = parts[1].trim()
 
-            filePairs.push(filePair)
-            percentages.push(percentage)
+        filePairs.push(filePair)
+        percentages.push(percentage)
+    })
+
+    //
+    // handle corpus
+    const corpusArray = corpus.trim().split('<<@')
+
+    const corpusArray2 = corpusArray.filter(element => element !== "")
+
+    corpusArray2.forEach(output => {
+        const parts = output.split('>>@')
+
+        const fileName = parts[0].trim()
+        const code = parts[1].trim()
+
+        fileNames.push(fileName)
+        codes.push(code)
+    })
+
+    // splits filePair into 2 files names, then matches it with fileNames 
+    filePairs.forEach(output => {
+        const parts = output.split('vs')
+
+        const filePairName1 = parts[0].trim()
+        const filePairName2 = parts[1].trim()
+
+        fileNames.forEach((output2, i) => {
+            if (filePairName1 === output2) {
+                codePair1.push(codes[i])
+            } else if (filePairName2 === output2) {
+                codePair2.push(codes[i])
+            }
         })
+    })
 
-        //
-        // handle corpus
-        const corpusArray = corpus.trim().split('<<@')
-
-        const corpusArray2 = corpusArray.filter(element => element !== "")
-
-        corpusArray2.forEach(output => {
-            const parts = output.split('>>@')
-
-            const fileName = parts[0].trim()
-            const code = parts[1].trim()
-
-            fileNames.push(fileName)
-            codes.push(code)
-        })
-
-        // splits filePair into 2 files names, then matches it with fileNames 
-        filePairs.forEach(output => {
-            const parts = output.split('vs')
-
-            const filePairName1 = parts[0].trim()
-            const filePairName2 = parts[1].trim()
-
-            fileNames.forEach((output2, i) => {
-                if (filePairName1 === output2) {
-                    codePair1.push(codes[i])
-                } else if (filePairName2 === output2) {
-                    codePair2.push(codes[i])
-                }
-            })
-        })
-
-
-    } catch (e) {
-        if (e instanceof TypeError && e.message.includes('parts[1] is undefined')) {
-            console.error('Error: Type error! Please include more than ONE(1) .py file in your .zip file.')
-            alert('Please submit more than ONE(1) .py file in your .zip file.')
-        } else {
-            console.error('An error occurred:', e.message);
-        }
-    }
 
     return (
         <div className="App" style={{ textAlign: "center" }}>
