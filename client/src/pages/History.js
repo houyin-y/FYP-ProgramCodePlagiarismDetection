@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Collapse from '@mui/material/Collapse'
@@ -30,23 +29,31 @@ function getColor(percentage, threshold) {
     return `rgb(${colorValue}, 0, 0)`
 }
 
-function CounterButton() {
-    const [count, setCount] = useState(0)
-
-    const handleClick = () => {
-        console.log(count)
-        setCount(count + 1)
+function getKeys() {
+    // find all the keys (for local storage) and store it in an array, keys
+    let keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        keys.push(localStorage.key(i));
     }
 
-    return (
-        <button onClick={handleClick}>
-            {count}
-        </button>
-    )
+    let filePairs = ''
+    let percentages = ''
+    let codePair1 = ''
+    let codePair2 = ''
+
+    // loop through each key to get...
+    keys.forEach(key => {
+        const retrievedData = JSON.parse(localStorage.getItem(key))
+        filePairs = retrievedData.filePairs
+        percentages = retrievedData.percentages
+        codePair1 = retrievedData.codePair1
+        codePair2 = retrievedData.codePair2
+    })
+
+    return {filePairs, percentages, codePair1, codePair2}
 }
 
-function Results() {
-    const location = useLocation()
+function History() {
     const [expanded, setExpanded] = useState({})
 
     const handleExpandClick = (index) => {
@@ -56,95 +63,16 @@ function Results() {
         }));
     }
 
-    // handling of dynamic display of results starts here
-    const { pythonOutput, corpus, value } = location.state
-
-    const filePairs = []
-    const percentages = []
-
-    const fileNames = []
-    const codes = []
-
-    const codePair1 = []
-    const codePair2 = []
-
-    //
-    // handle pythonOutput
-    const pythonOutputArray = pythonOutput.trim().split('\r\n')
-
-    pythonOutputArray.forEach(output => {
-        const parts = output.split(':')
-
-        const filePair = parts[0].trim()
-        const percentage = parts[1].trim()
-
-        filePairs.push(filePair)
-        percentages.push(percentage)
-    })
-
-    //
-    // handle corpus
-    const corpusArray = corpus.trim().split('<<@')
-
-    const corpusArray2 = corpusArray.filter(element => element !== "")
-
-    corpusArray2.forEach(output => {
-        const parts = output.split('>>@')
-
-        const fileName = parts[0].trim()
-        const code = parts[1].trim()
-
-        fileNames.push(fileName)
-        codes.push(code)
-    })
-
-    // splits filePair into 2 files names, then matches it with fileNames 
-    filePairs.forEach(output => {
-        const parts = output.split('vs')
-
-        const filePairName1 = parts[0].trim()
-        const filePairName2 = parts[1].trim()
-
-        fileNames.forEach((output2, i) => {
-            if (filePairName1 === output2) {
-                codePair1.push(codes[i])
-            } else if (filePairName2 === output2) {
-                codePair2.push(codes[i])
-            }
-        })
-    })
-
-    //
-    // handle storing of results
-    const [dataToStore, setDataToStore] = useState({ filePairs, percentages, codePair1, codePair2 })
-
-    const storeData = () => {
-        let key = 'myData';
-        let i = 1;
-
-        // check if key exists, if so, increment the key
-        while (localStorage.getItem(`${key}${i !== 0 ? i : ''}`) !== null) {
-            i++;
-        }
-
-        // store the data with the new key
-        const newKey = `${key}${i !== 0 ? i : ''}`
-        localStorage.setItem(newKey, JSON.stringify(dataToStore));
-
-        console.log(newKey)
-    }
+    const {filePairs, percentages, codePair1, codePair2} = getKeys()
 
     return (
         <div className="App" style={{ textAlign: "center" }}>
             <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
 
-            <CounterButton />
-            <button onClick={storeData}>Store Data</button>
-
             <div style={{ textAlign: "center" }}>
                 {filePairs.map((filePair, index) => {
                     // skip rendering if plagiarism thrsehold below threshold
-                    if (parseFloat(percentages[index]) < value) {
+                    if (parseFloat(percentages[index]) < 0) {
                         return null
                     }
 
@@ -153,7 +81,7 @@ function Results() {
                             <Card>
                                 <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <Typography>{filePair}</Typography>
-                                    <Typography sx={{ marginLeft: "auto", color: getColor(parseFloat(percentages[index]), value) }}>{percentages[index]}</Typography>
+                                    <Typography sx={{ marginLeft: "auto", color: getColor(parseFloat(percentages[index]), 0) }}>{percentages[index]}</Typography>
 
                                     <ExpandMore
                                         expand={expanded[index]}
@@ -183,8 +111,7 @@ function Results() {
                 })}
             </div>
         </div>
-
     )
 }
 
-export default Results
+export default History

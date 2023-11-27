@@ -1,6 +1,8 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -30,6 +32,30 @@ const buttonStyle = {
   marginRight: "25px"
 }
 
+// find all the keys (for local storage) and store it in an array, keys
+function getKeys() {
+  let keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+      keys.push(localStorage.key(i));
+  }
+
+  let filePairs = []
+  let percentages = []
+  let codePair1 = []
+  let codePair2 = []
+
+  // loop through each key to get...
+  keys.forEach(key => {
+      const retrievedData = JSON.parse(localStorage.getItem(key))
+      filePairs.push(retrievedData.filePairs)
+      percentages.push(retrievedData.percentages)
+      codePair1.push(retrievedData.codePair1)
+      codePair2.push(retrievedData.codePair2)
+  })
+
+  return {filePairs, percentages, codePair1, codePair2}
+}
+
 
 function PopUp({ imageType, onValueChange }) {
   const [open, setOpen] = React.useState(false)
@@ -46,6 +72,8 @@ function PopUp({ imageType, onValueChange }) {
   const handleButtonClick = () => {
     onValueChange(sliderValue)
   }
+
+  const {filePairs, percentages, codePair1, codePair2} = getKeys()
 
   let dialogTitle = ''
   let dialogContent = null
@@ -72,7 +100,7 @@ function PopUp({ imageType, onValueChange }) {
       )
       additionalDialogContent = (
         <DialogActions>
-          <Button autoFocus onClick={() => {handleClose(); handleButtonClick(); }}>
+          <Button autoFocus onClick={() => { handleClose(); handleButtonClick(); }}>
             Save changes
           </Button>
         </DialogActions>
@@ -86,6 +114,11 @@ function PopUp({ imageType, onValueChange }) {
           <Typography gutterBottom style={{ margin: "10px" }}>
             *will include a clickable link-ish? that will send users to stored results page... :D
           </Typography>
+          <Card style={{}}>
+            <CardContent>
+              1.py vs 2.py      100%
+            </CardContent>
+          </Card>
         </DialogContent>
       )
       additionalDialogContent = (
@@ -149,6 +182,7 @@ function PopUp({ imageType, onValueChange }) {
 
       </BootstrapDialog>
     </React.Fragment>
-  )}
+  )
+}
 
 export default PopUp;
