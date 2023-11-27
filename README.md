@@ -16,10 +16,10 @@ The program codes are converted into tokens using Pygments.
 Based on the token types in Pygments, whitespaces and comments are filtered out.
 
 ### Comparison
-- K-gram
+- K-gram:
 The tokens are represented by k-grams.
 
-- Cosine similarity
+- Cosine similarity:
 The similarity rate will be calculated using cosine similarity. 
 
 
@@ -30,3 +30,18 @@ The similarity rate will be calculated using cosine similarity.
 - Express JS (wip)
 - React JS (wip)
 - Node JS (wip)
+
+### Dependecies
+- Node
+  - adm-zip
+  - cors
+  - express
+  - multer
+  - path
+- React
+  - axios
+  - react-router-dom
+  - @emotion/react
+  - @emotion/styled
+  - @mui/icons-material
+  - @mui/material
