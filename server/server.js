@@ -99,17 +99,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
 	let corpus = ''
 
 	pythonProcess.stdout.on('data', (data) => {
-		// Split the lines of the output
+		// split the output into lines, where lines = (pythonOutput | corpus )
 		const lines = data.toString().split('corpus: ')
-
-		// Combine the all the lines except for the last line into the pythonOutput variable
 		pythonOutput = lines[0]
 		
-		// Assign the last line to the corpus variable
 		corpus = lines[lines.length - 1]
 
 		console.log(`\nPython script output (pythonOutput): ... \n${pythonOutput}`)
-		console.log(`\nPython script output (corpus): ... \n${corpus}`)
+		console.log(`Python script output (corpus): ... ${corpus}`)
 	});
 
 	pythonProcess.stderr.on('data', (data) => {

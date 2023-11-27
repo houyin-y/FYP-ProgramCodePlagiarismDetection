@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 
-function FileSubmission() {
+function FileSubmission({ value }) {
     const navigate = useNavigate()
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -40,7 +40,7 @@ function FileSubmission() {
                 const corpus = response.data.corpus
 
                 console.log('File upload success! Moving to the next page...')
-                navigate('/results', { state: { pythonOutput, corpus } })
+                navigate('/results', { state: { pythonOutput, corpus, value } })
             } else {
                 console.error('Python script failed.')
                 alert('Python script failed. Please check the submitted files and try again.')

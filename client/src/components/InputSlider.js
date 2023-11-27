@@ -4,11 +4,12 @@ import Grid from '@mui/material/Grid';
 import Slider from '@mui/material/Slider';
 import Input from '@mui/material/Input';
 
-function InputSlider() {
+function InputSlider({ onValueChange }) {
     const [value, setValue] = useState(30)
   
     const handleSliderChange = (event, newValue) => {
       setValue(newValue)
+      onValueChange(newValue)
     }
   
     const handleInputChange = (event) => {
@@ -24,7 +25,7 @@ function InputSlider() {
     }
   
     return (
-      <Box sx={{ width: 533 }}>
+      <Box sx={{ width: '99%' }}>
         <Grid container spacing={2} alignItems="center">
   
           <Grid item sx={{ width: 70 }}>

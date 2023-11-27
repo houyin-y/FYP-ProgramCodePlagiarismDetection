@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState} from 'react'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import Dialog from '@mui/material/Dialog'
@@ -31,8 +31,9 @@ const buttonStyle = {
 }
 
 
-function PopUp({ imageType }) {
+function PopUp({ imageType, onValueChange }) {
   const [open, setOpen] = React.useState(false)
+  const [sliderValue, setSliderValue] = useState(30)
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -40,6 +41,10 @@ function PopUp({ imageType }) {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleButtonClick = () => {
+    onValueChange(sliderValue)
   }
 
   let dialogTitle = ''
@@ -56,7 +61,7 @@ function PopUp({ imageType }) {
             Similarity percentage below threshold will not be considered as plagiarism.
             <br />
             <br />
-            <InputSlider />
+            <InputSlider onValueChange={setSliderValue} />
             <br />
             <b>Code exclusion</b><br />
             Upload code(s) to be exempted from plagiarism.<br /><br />
@@ -67,7 +72,7 @@ function PopUp({ imageType }) {
       )
       additionalDialogContent = (
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={() => {handleClose(); handleButtonClick(); }}>
             Save changes
           </Button>
         </DialogActions>

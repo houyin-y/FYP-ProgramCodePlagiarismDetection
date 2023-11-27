@@ -33,6 +33,8 @@ function Results() {
     }
 
     // handling of dynamic display of results starts here
+    const { pythonOutput, corpus, value } = location.state
+
     const filePairs = []
     const percentages = []
 
@@ -41,12 +43,13 @@ function Results() {
 
     const codePair1 = []
     const codePair2 = []
+    
 
     try {
-        const { pythonOutput, corpus } = location.state
+        //
+        // handle pythonOutput
         const pythonOutputArray = pythonOutput.trim().split('\r\n')
 
-        // handle pythonOutput
         pythonOutputArray.forEach(output => {
             const parts = output.split(':')
 
@@ -57,6 +60,7 @@ function Results() {
             percentages.push(percentage)
         })
 
+        //
         // handle corpus
         const corpusArray = corpus.trim().split('<<@')
 
@@ -88,6 +92,7 @@ function Results() {
             })
         })
 
+
     } catch (e) {
         if (e instanceof TypeError && e.message.includes('parts[1] is undefined')) {
             console.error('Error: Type error! Please include more than ONE(1) .py file in your .zip file.')
@@ -102,8 +107,14 @@ function Results() {
             <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
 
             <div style={{ textAlign: "center" }}>
-                {filePairs.map((filePair, index) => (
-                    <div key={index} style={{ margin: 'auto', marginBottom: '20px', width: '650px' }}>
+                {filePairs.map((filePair, index) => {
+                    // skip rendering if plagiarism thrsehold below threshold
+                    if (parseFloat(percentages[index]) < value) { 
+                        return null
+                    }
+
+                    return (
+                        <div key={index} style={{ margin: 'auto', marginBottom: '20px', width: '40%' }}>
                         <Card>
                             <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Typography>{filePair}</Typography>
@@ -120,18 +131,21 @@ function Results() {
                             </CardContent>
                             <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                                 <Divider variant="middle" />
-                                <CardContent style={{ whiteSpace: 'pre-line', display: 'flex', flexDirection: 'row', textAlign: 'left' }}>
-                                    <Typography component="div" style={{ width: '300px' }}>
-                                        <pre>{codePair1[index]}</pre>
+                                <CardContent style={{ display: 'flex', flexDirection: 'row', textAlign: 'left' }}>
+                                    <Typography component="div" style={{ width: '50%', overflow: 'auto' }}>
+                                        <pre>
+                                            {codePair1[index]}
+                                        </pre>
                                     </Typography>
-                                    <Typography component="div" style={{ width: '300px' }}>
+                                    <Typography component="div" style={{ width: '50%', overflow: 'auto' }}>
                                         <pre>{codePair2[index]}</pre>
                                     </Typography>
                                 </CardContent>
                             </Collapse>
                         </Card>
                     </div>
-                ))}
+                    )
+                })}
             </div>
         </div>
 

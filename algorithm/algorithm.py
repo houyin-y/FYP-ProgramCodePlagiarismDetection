@@ -138,6 +138,3 @@ def cosine_similarity(tfidf1, tfidf2):
     cosine = "{:.2f}%".format((cosine * 100))
     
     return cosine
-
-
-

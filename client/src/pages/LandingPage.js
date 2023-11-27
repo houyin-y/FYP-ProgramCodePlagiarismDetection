@@ -1,4 +1,4 @@
-import React  from "react"
+import React, { useState } from "react"
 import PopUp from '../components/PopUp'
 import FileUpload from '../components/FileUpload'
 
@@ -6,6 +6,7 @@ import FileUpload from '../components/FileUpload'
 
 
 function LandingPage() {
+    const [value, setValue] = useState(30)
 
     return (
         <div className="App" style={{ textAlign: "center" }}>
@@ -14,7 +15,7 @@ function LandingPage() {
             <div align="right" style={{ marginTop: "30px", marginRight: "50px" }}>
                 <PopUp imageType='history' />
 
-                <PopUp imageType='settings' />
+                <PopUp imageType='settings' onValueChange={setValue} />
             </div>
 
             <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
@@ -27,7 +28,7 @@ function LandingPage() {
             </div>
             */}
 
-            <FileUpload />
+            <FileUpload value={value} />
 
         </div>
     )

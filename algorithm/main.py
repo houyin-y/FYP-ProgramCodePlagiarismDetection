@@ -57,6 +57,7 @@ for pair in pairs:
     cosine_similarity = algo.cosine_similarity(tfidf1, tfidf2)
     print(f'{pair[0]} vs {pair[1]}: {cosine_similarity}')
 
+# pass corpus as an output
 print("corpus: ")
 
 for code in corpusWithNames:
