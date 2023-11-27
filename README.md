@@ -31,7 +31,7 @@ The similarity rate will be calculated using cosine similarity.
 - React JS (wip)
 - Node JS (wip)
 
-### Dependecies
+## Dependencies
 - Node
   - adm-zip
   - cors
