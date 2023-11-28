@@ -1,66 +1,59 @@
-import React, { useState } from 'react'
+import React from 'react'
 import axios from 'axios'
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 function CodeExclusionUpload() {
-    const [selectedFile, setSelectedFile] = useState(null);
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0]
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setSelectedFile(file);
-    }
+        if (file) {
+            const formData = new FormData()
+            formData.append('file', file)
 
-    const handleFileSubmit = async (e) => {
-        e.preventDefault()
+            try {
+                const response = await axios.post('http://localhost:8000/uploadExcl', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
 
-        // checks if the submitted file is a file
-        if (!selectedFile) {
-            alert('Please select a file')
-            return
-        }
-
-        // adds file to formData
-        const formData = new FormData()
-        formData.append('file', selectedFile)
-
-        try {
-            const response = await axios.post('http://localhost:8000/uploadExcl', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-
-            if (response.data.success) {
-                alert('Success! Please proceed.')
-            } else {
-                alert('Something went wrong! Please upload try again.')
-            }
-
-        } catch (e) {
-            console.error('Error:', e)
-
-            if (e.response) {
-                console.log(e.response.data);
-
-                // checks if the ERROR MESSAGE from the server matches
-                if (e.response.data && e.response.data.error === 'Hey.... that\'s not python!') {
-                    alert("Hey.... that's not a python!\nPlease attach ONLY python files in your .zip file.");
+                if (response.data.success) {
+                    alert('Success! Please proceed.')
                 } else {
-                    alert('An error occurred during file upload.');
-                    // Handle other error cases if needed
+                    alert('Something went wrong! Please upload try again.')
                 }
-            } else {
-                // Handle cases where e.response is undefined
-                alert('An error occurred during the request. Please check your network connection.');
+
+            } catch (error) {
+                console.error('Error:', error)
+
+                if (error.response) {
+                    console.log(error.response.data);
+
+                    // checks if the ERROR MESSAGE from the server matches
+                    if (error.response.data && error.response.data.error === 'Hey.... that\'s not python!') {
+                        alert("Hey.... that's not a python!\nPlease attach ONLY python files in your .zip file.")
+                    } else {
+                        alert('An error occurred during file upload.')
+                    }
+                } else {
+                    alert('An error occurred during file upload.')
+                }
             }
         }
     }
+
 
     return (
         <div>
-            <form action="/upload" method="post" encType="multipart/form-data" onSubmit={handleFileSubmit}>
-                <input type="file" name="files" accept=".zip" onChange={handleFileChange} />
-                <input type="submit" value="Upload file" />
+            <form action="/upload" method="post" encType="multipart/form-data">
+                <input type="file" name="files" accept=".zip" onChange={handleFileChange} style={{ display: 'none' }} id="upload-Excl" />
+                <label htmlFor="upload-Excl">
+                    <Button component="span" variant="contained" startIcon={<CloudUploadIcon />}>
+                        Upload file
+                    </Button>
+                </label>
             </form>
         </div>
     )

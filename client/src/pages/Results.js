@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
+import Button from '@mui/material/Button'
 
 
 const ExpandMore = styled((props) => {
@@ -30,20 +31,6 @@ function getColor(percentage, threshold) {
     return `rgb(${colorValue}, 0, 0)`
 }
 
-function CounterButton() {
-    const [count, setCount] = useState(0)
-
-    const handleClick = () => {
-        console.log(count)
-        setCount(count + 1)
-    }
-
-    return (
-        <button onClick={handleClick}>
-            {count}
-        </button>
-    )
-}
 
 function Results() {
     const location = useLocation()
@@ -143,10 +130,9 @@ function Results() {
         <div className="App" style={{ textAlign: "center" }}>
             <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
 
-            <CounterButton />
-            <button onClick={storeData}>Store Data</button>
+            <Button variant="contained" onClick={storeData}>Save Data</Button>
 
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
                 {filePairs.map((filePair, index) => {
                     // skip rendering if plagiarism thrsehold below threshold
                     if (parseFloat(percentages[index]) < value) {
