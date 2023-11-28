@@ -124,6 +124,7 @@ function Results() {
         localStorage.setItem(newKey, JSON.stringify({ ...dataToStore, currentDate }));
 
         console.log(newKey, value)
+        alert("Saved!")
     }
 
     return (
