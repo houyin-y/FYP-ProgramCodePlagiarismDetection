@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Collapse from '@mui/material/Collapse'
@@ -29,29 +30,6 @@ function getColor(percentage, threshold) {
     return `rgb(${colorValue}, 0, 0)`
 }
 
-function getKeys() {
-    // find all the keys (for local storage) and store it in an array, keys
-    let keys = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        keys.push(localStorage.key(i));
-    }
-
-    let filePairs = ''
-    let percentages = ''
-    let codePair1 = ''
-    let codePair2 = ''
-
-    // loop through each key to get...
-    keys.forEach(key => {
-        const retrievedData = JSON.parse(localStorage.getItem(key))
-        filePairs = retrievedData.filePairs
-        percentages = retrievedData.percentages
-        codePair1 = retrievedData.codePair1
-        codePair2 = retrievedData.codePair2
-    })
-
-    return {filePairs, percentages, codePair1, codePair2}
-}
 
 function History() {
     const [expanded, setExpanded] = useState({})
@@ -63,7 +41,10 @@ function History() {
         }));
     }
 
-    const {filePairs, percentages, codePair1, codePair2} = getKeys()
+    const location = useLocation()
+
+    const { filePairs, percentages, codePair1, codePair2, threshValue } = location.state
+
 
     return (
         <div className="App" style={{ textAlign: "center" }}>
@@ -72,7 +53,7 @@ function History() {
             <div style={{ textAlign: "center" }}>
                 {filePairs.map((filePair, index) => {
                     // skip rendering if plagiarism thrsehold below threshold
-                    if (parseFloat(percentages[index]) < 0) {
+                    if (parseFloat(percentages[index]) < threshValue) {
                         return null
                     }
 
@@ -81,7 +62,7 @@ function History() {
                             <Card>
                                 <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <Typography>{filePair}</Typography>
-                                    <Typography sx={{ marginLeft: "auto", color: getColor(parseFloat(percentages[index]), 0) }}>{percentages[index]}</Typography>
+                                    <Typography sx={{ marginLeft: "auto", color: getColor(parseFloat(percentages[index]), threshValue) }}>{percentages[index]}</Typography>
 
                                     <ExpandMore
                                         expand={expanded[index]}

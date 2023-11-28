@@ -6,7 +6,6 @@ import Processing from './pages/Processing'
 import Results from './pages/Results'
 import NotFound from './pages/NotFound'
 
-// import DragNdrop from "./DragNDrop.jsx"
 
 function App() {
 

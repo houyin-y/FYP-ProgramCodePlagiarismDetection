@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
 import settingsImage from "../img/settings.png"
 import historyImage from "../img/history.png"
 import InputSlider from "./InputSlider"
 import CodeExclusionUpload from "./CodeExclusionUpload"
+import PopUpHistory from './PopUpHistory'
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -32,31 +31,6 @@ const buttonStyle = {
   marginRight: "25px"
 }
 
-// find all the keys (for local storage) and store it in an array, keys
-function getKeys() {
-  let keys = [];
-  for (let i = 0; i < localStorage.length; i++) {
-      keys.push(localStorage.key(i));
-  }
-
-  let filePairs = []
-  let percentages = []
-  let codePair1 = []
-  let codePair2 = []
-
-  // loop through each key to get...
-  keys.forEach(key => {
-      const retrievedData = JSON.parse(localStorage.getItem(key))
-      filePairs.push(retrievedData.filePairs)
-      percentages.push(retrievedData.percentages)
-      codePair1.push(retrievedData.codePair1)
-      codePair2.push(retrievedData.codePair2)
-  })
-
-  return {filePairs, percentages, codePair1, codePair2}
-}
-
-
 function PopUp({ imageType, onValueChange }) {
   const [open, setOpen] = React.useState(false)
   const [sliderValue, setSliderValue] = useState(30)
@@ -72,8 +46,6 @@ function PopUp({ imageType, onValueChange }) {
   const handleButtonClick = () => {
     onValueChange(sliderValue)
   }
-
-  const {filePairs, percentages, codePair1, codePair2} = getKeys()
 
   let dialogTitle = ''
   let dialogContent = null
@@ -110,22 +82,9 @@ function PopUp({ imageType, onValueChange }) {
     case 'history':
       dialogTitle = "History"
       dialogContent = (
-        <DialogContent dividers>
-          <Typography gutterBottom style={{ margin: "10px" }}>
-            *will include a clickable link-ish? that will send users to stored results page... :D
-          </Typography>
-          <Card style={{}}>
-            <CardContent>
-              1.py vs 2.py      100%
-            </CardContent>
-          </Card>
-        </DialogContent>
+        <PopUpHistory />
       )
-      additionalDialogContent = (
-        <div>
-          {/* whatever I want to add within the dialog */}
-        </div>
-      )
+      additionalDialogContent = null
       break;
     default:
   }

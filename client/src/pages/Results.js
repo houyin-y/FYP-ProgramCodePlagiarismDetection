@@ -116,7 +116,8 @@ function Results() {
 
     //
     // handle storing of results
-    const [dataToStore, setDataToStore] = useState({ filePairs, percentages, codePair1, codePair2 })
+    let currentDate = ''
+    const [dataToStore, setDataToStore] = useState({ filePairs, percentages, codePair1, codePair2, currentDate, value })
 
     const storeData = () => {
         let key = 'myData';
@@ -126,12 +127,16 @@ function Results() {
         while (localStorage.getItem(`${key}${i !== 0 ? i : ''}`) !== null) {
             i++;
         }
+ 
+        // get current date
+        currentDate = new Date()
+        currentDate = currentDate.toString()
 
         // store the data with the new key
         const newKey = `${key}${i !== 0 ? i : ''}`
-        localStorage.setItem(newKey, JSON.stringify(dataToStore));
+        localStorage.setItem(newKey, JSON.stringify({ ...dataToStore, currentDate }));
 
-        console.log(newKey)
+        console.log(newKey, value)
     }
 
     return (
