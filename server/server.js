@@ -76,57 +76,62 @@ app.post('/upload', upload.single('file'), (req, res) => {
 	const zip = new AdmZip(req.file.path)
 
 	// check each file for .py extension
-	zip.getEntries().forEach((entry) => {
-		const fileExtension = entry.entryName.split('.').pop()
+	const hasNonPythonFile = zip.getEntries().some((entry) => {
+		const fileExtension = entry.entryName.split('.').pop();
 
 		if (fileExtension !== 'py') {
-			return res.status(400).json({ success: false, error: 'Hey.... that\'s not python!' })
+			// Return a JSON response and indicate that a non-Python file was found
+			res.status(400).json({ success: false, error: 'Hey.... that\'s not python!' });
+			return true; // Stop iterating
 		} else {
-			// hehe I'll keep this as an easter egg! :D
-			console.log('Python found! AAAAAA')
-		}
-	})
-
-
-	// run Python script using a child process (spawn)
-	const zipFilePath = './uploads/' + zipFileName
-	const algoPath = '../algorithm/main.py'
-
-	const pythonProcess = spawn('python', [algoPath, zipFilePath])
-
-	// collect the output (results and corpus) of the script into a variable 
-	let pythonOutput = ''
-	let corpus = ''
-
-	pythonProcess.stdout.on('data', (data) => {
-		// split the output into lines, where lines = (pythonOutput | corpus )
-		const lines = data.toString().split('corpus: ')
-		pythonOutput = lines[0]
-		
-		corpus = lines[lines.length - 1]
-
-		console.log(`\nPython script output (pythonOutput): ... \n${pythonOutput}`)
-		console.log(`Python script output (corpus): ... ${corpus}`)
-	});
-
-	pythonProcess.stderr.on('data', (data) => {
-		console.error(`stderr: ${data}`);
-	});
-
-	pythonProcess.on('error', (err) => {
-		console.error(`Failed to start subprocess: ${err}`);
-	});
-
-	// close the python process
-	pythonProcess.on('close', (code) => {
-		console.log(`Python script exited with code ${code}`)
-
-		if (code === 0) {
-			res.json({ success: true, pythonOutput, corpus })
-		} else {
-			res.json({ success: false, pythonOutput: null, corpus: null })
+			// This will be executed only for Python files
+			console.log('Python found! AAAAAA');
+			return false; // Continue iterating
 		}
 	});
+
+
+	if (!hasNonPythonFile) {
+		// run Python script using a child process (spawn)
+		const zipFilePath = './uploads/' + zipFileName
+		const algoPath = '../algorithm/main.py'
+
+		const pythonProcess = spawn('python', [algoPath, zipFilePath])
+
+		// collect the output (results and corpus) of the script into a variable 
+		let pythonOutput = ''
+		let corpus = ''
+
+		pythonProcess.stdout.on('data', (data) => {
+			// split the output into lines, where lines = (pythonOutput | corpus )
+			const lines = data.toString().split('corpus: ')
+			pythonOutput = lines[0]
+
+			corpus = lines[lines.length - 1]
+
+			console.log(`\nPython script output (pythonOutput): ... \n${pythonOutput}`)
+			console.log(`Python script output (corpus): ... ${corpus}`)
+		});
+
+		pythonProcess.stderr.on('data', (data) => {
+			console.error(`stderr: ${data}`);
+		});
+
+		pythonProcess.on('error', (err) => {
+			console.error(`Failed to start subprocess: ${err}`);
+		});
+
+		// close the python process
+		pythonProcess.on('close', (code) => {
+			console.log(`Python script exited with code ${code}`)
+
+			if (code === 0) {
+				res.json({ success: true, pythonOutput, corpus })
+			} else {
+				res.json({ success: false, pythonOutput: null, corpus: null })
+			}
+		});
+	}
 
 })
 

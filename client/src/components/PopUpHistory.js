@@ -27,7 +27,7 @@ function getKeys() {
     let currentDate = []
     let threshValue = []
 
-    // loop through each key to get...
+    // loop through each key to get the passed props
     keys.forEach(key => {
         const retrievedData = JSON.parse(localStorage.getItem(key))
         filePairs.push(retrievedData.filePairs)
