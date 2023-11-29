@@ -25,14 +25,16 @@ The similarity rate will be calculated using cosine similarity.
 
 ## Tech Stack
 - Python
-  - Pygments
-  - Numpy
-- Express JS (wip)
-- React JS (wip)
-- Node JS (wip)
+- Express JS 
+- React JS 
+- Node JS 
 
 ## Dependencies
+- Python
+  - Pygments
+  - Numpy
 - Node
+  - npm-run-all
   - adm-zip
   - cors
   - express
