@@ -28,7 +28,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const buttonStyle = {
   backgroundColor: "rgba(255,255,255,0.5)",
   border: "None",
-  marginRight: "25px"
+  marginRight: "25px",
+  width: "70px",
 }
 
 function PopUp({ imageType, onValueChange }) {
@@ -63,8 +64,8 @@ function PopUp({ imageType, onValueChange }) {
             <br />
             <InputSlider onValueChange={setSliderValue} />
             <br />
-            <b>Code exclusion</b><br />
-            Upload code(s) to be exempted from plagiarism.<br /><br />
+            <b>Template Submission</b><br />
+            Upload template in <mark>.zip</mark> to be exempt it from plagiarism.<br /><br />
 
             <CodeExclusionUpload />
           </Typography>

@@ -9,6 +9,8 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import Button from '@mui/material/Button'
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
+import { useNavigate } from 'react-router-dom'
 
 
 const ExpandMore = styled((props) => {
@@ -33,6 +35,8 @@ function getColor(percentage, threshold) {
 
 
 function Results() {
+    const navigate = useNavigate()
+
     const location = useLocation()
     const [expanded, setExpanded] = useState({})
 
@@ -129,7 +133,18 @@ function Results() {
 
     return (
         <div className="App" style={{ textAlign: "center" }}>
-            <h1 style={{ marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>Program Code Plagiarism Detector</h1>
+            <h1 style={{ display: "flex", justifyContent: "center", marginTop: "30px", marginBottom: "50px", fontSize: "50px" }}>
+            <IconButton 
+                style={{ position: "absolute", left: "90px", top: '50%', transform: 'translateY(-50%)' }}
+                onClick={(() => {
+                    navigate('/')
+                })}
+            >
+                <ArrowBackIosNewOutlinedIcon style={{ fontSize: "50px" }}/>
+            </IconButton>
+
+                Program Code Plagiarism Detector
+            </h1>
 
             <Button variant="contained" onClick={storeData}>Save Data</Button>
 

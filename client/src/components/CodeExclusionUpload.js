@@ -22,7 +22,7 @@ function CodeExclusionUpload() {
                 if (response.data.success) {
                     alert('Success! Please proceed.')
                 } else {
-                    alert('Something went wrong! Please upload try again.')
+                    alert('Something went wrong! Please try again.')
                 }
 
             } catch (error) {
