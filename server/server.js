@@ -140,11 +140,17 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 const storageExcl = multer.diskStorage({
 	destination: (req, file, cb) => {
-		const uploadDir = path.join(__dirname, 'uploads/code_exclusion/')
+		const uploadDir = path.join(__dirname, 'uploads/')
+		const uploadDir2 = path.join(__dirname, 'uploads/code_exclusion/')
 
 		// ensure 'uploads' directory exists
 		if (!fs.existsSync(uploadDir)) {
-			fs.mkdirSync(uploadDir)
+			fs.mkdir(uploadDir)
+		}
+
+		// ensure 'uploads/exclusion' directory exists
+		if (!fs.existsSync(uploadDir2)) {
+			fs.mkdirSync(uploadDir2)
 		}
 
 		// Check if the directory has any files before attempting to delete

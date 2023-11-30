@@ -28,7 +28,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const buttonStyle = {
   backgroundColor: "rgba(255,255,255,0.5)",
   border: "None",
-  marginRight: "25px",
   width: "70px",
 }
 
@@ -110,9 +109,12 @@ function PopUp({ imageType, onValueChange }) {
   return (
     <React.Fragment>
 
-      <Button onClick={handleClickOpen}>
+    <div style={{ display: "inline-block", marginRight: "20px"}}>
+    <Button onClick={handleClickOpen}>
         <img src={getImage()} alt={getAltText()} style={buttonStyle} />
       </Button>
+    </div>
+      
 
       <BootstrapDialog
         onClose={handleClose}

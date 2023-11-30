@@ -12,6 +12,10 @@ from itertools import combinations
 
 # stores files locally
 def storeCodes(zip_file_path, extracted_folder_path):
+    # create folder if does not exist
+    if not os.path.exists(extracted_folder_path):
+        os.makedirs(extracted_folder_path)
+
     # remove all files in extracted_folder
     file_names = os.listdir(extracted_folder_path)
 
@@ -56,6 +60,10 @@ def generateCorpus(zip_file_path, extracted_folder_path):
 
     # checks if there are any codes submitted for code exclusion
     extracted_code_exclusion_folder = '../algorithm/extracted_folder/code_exclusion'
+
+    # create '/algorithm/extracted_folder/code_exclusion' if does not exist
+    if not os.path.exists(extracted_code_exclusion_folder):
+        os.makedirs(extracted_code_exclusion_folder)
 
     if (len(os.listdir(extracted_code_exclusion_folder)) > 0):
         excludedCodes = getExcludedCodes()
