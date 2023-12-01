@@ -3,7 +3,7 @@
 
 from pygments import lex
 from pygments.lexers import PythonLexer
-from pygments.token import Text, Comment, String
+from pygments.token import Text, Comment, String, Keyword, Name
 import numpy as np
 from numpy.linalg import norm
 
@@ -18,9 +18,12 @@ def tokenize(code):
     tokens = list(lex(code, lexer))
     
     # data cleaning
-    # remove whitespaces (space, tab, next line) and comments (single-line comments and multi-line comments)
-    filtered_tokens = [(token1, token2) for token1, token2 in tokens if (token1 != Text and token1 != Text.Whitespace and token1 != Comment.Single and token1 != String.Doc)]
-    
+    # remove whitespaces (space, tab, next line), comments (single-line comments and multi-line comments) and import statements (import, from)
+    filtered_tokens = [
+    (token1, token2) for token1, token2 in tokens
+    if token1 not in {Text, Text.Whitespace, Comment.Single, String.Doc, Keyword.Namespace, Name.Namespace}
+]
+
     return filtered_tokens
     
 # convert the tokens into kgrams (value of k is a parameter)

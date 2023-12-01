@@ -154,11 +154,11 @@ const storageExcl = multer.diskStorage({
 		}
 
 		// Check if the directory has any files before attempting to delete
-		if (directoryHasFiles(uploadDir)) {
-			deleteFilesInDirectory(uploadDir);
+		if (directoryHasFiles(uploadDir2)) {
+			deleteFilesInDirectory(uploadDir2);
 		}
 
-		cb(null, uploadDir);
+		cb(null, uploadDir2);
 	},
 	filename: (req, file, cb) => {
 		zipFileName = Date.now() + '-' + file.originalname			// Rename to avoid duplicates
