@@ -26,7 +26,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const buttonStyle = {
-  backgroundColor: "rgba(255,255,255,0.5)",
+  backgroundColor: "rgba(255,255,255,0)",
   border: "None",
   width: "70px",
 }
@@ -64,7 +64,8 @@ function PopUp({ imageType, onValueChange }) {
             <InputSlider onValueChange={setSliderValue} />
             <br />
             <b>Template Submission</b><br />
-            Upload template in <mark>.zip</mark> to be exempt it from plagiarism.<br /><br />
+            Upload template in <mark>.zip</mark> to be exempt it from plagiarism.<br />
+            Template has to be in .py before zipping it.<br /><br /><br />
 
             <CodeExclusionUpload />
           </Typography>

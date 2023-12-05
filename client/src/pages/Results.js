@@ -146,7 +146,7 @@ function Results() {
                 Program Code Plagiarism Detector
             </h1>
 
-            <Button variant="contained" onClick={storeData}>Save Data</Button>
+            <Button variant="contained" onClick={storeData}>Save Results</Button>
 
             <div style={{ textAlign: "center", marginTop: "20px" }}>
                 {filePairs.map((filePair, index) => {
@@ -158,9 +158,9 @@ function Results() {
                     return (
                         <div key={index} style={{ margin: 'auto', marginBottom: '20px', width: '40%' }}>
                             <Card>
-                                <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative' }}>
                                     <Typography>{filePair}</Typography>
-                                    <Typography sx={{ marginLeft: "auto", color: getColor(parseFloat(percentages[index]), value) }}>{percentages[index]}</Typography>
+                                    <Typography sx={{ position: 'absolute', right: 70, color: getColor(parseFloat(percentages[index]), value), }}>{percentages[index]}</Typography>
 
                                     <ExpandMore
                                         expand={expanded[index]}

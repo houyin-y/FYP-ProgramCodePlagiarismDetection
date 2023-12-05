@@ -21,6 +21,8 @@ function LandingPage() {
                 Submit your files to begin plagiarism detection.
             <br /><br />
                 <small style={{fontSize:"20px"}}>Please compile all your .py files into a .zip file, and upload ONE (1) .zip file.</small>
+                <br />
+                <small style={{fontSize:"18px"}}>Head to Settings to upload your template for code exclusion. (optional)</small>
             </p>
 
             <FileUpload value={value} />

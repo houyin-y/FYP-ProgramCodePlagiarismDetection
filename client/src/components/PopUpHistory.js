@@ -19,9 +19,12 @@ function getColor(percentage, threshold) {
 
 // find all the keys (for local storage) and store it in an array, keys
 function getKeys() {
-    let keys = [];
+    let keys = []
     for (let i = 0; i < localStorage.length; i++) {
-        keys.push(localStorage.key(i));
+        let key = localStorage.key(i)
+
+        if (key.startsWith('myData'))
+            keys.push(key)
     }
 
     let filePairs = []
@@ -34,6 +37,7 @@ function getKeys() {
     // loop through each key to get the passed props
     keys.forEach(key => {
         const retrievedData = JSON.parse(localStorage.getItem(key))
+
         filePairs.push(retrievedData.filePairs)
         percentages.push(retrievedData.percentages)
         codePair1.push(retrievedData.codePair1)
